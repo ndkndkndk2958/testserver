@@ -83,6 +83,7 @@ def add_total_hearts():
     return 'add total hearts!'
 
 if __name__ == '__main__':
+    app = Flask(__name__)
     socketio.run(app, debug=True,port=8000)
     app.debug = True
     http_server = WSGIServer(('', 8000), app, handler_class=WebSocketHandler)
