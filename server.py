@@ -6,6 +6,10 @@ from geventwebsocket.handler import WebSocketHandler
 import os
 import random
 
+import tensorflow as tf
+
+with tf.device('/cpu:0'):
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.getcwd(), 'gumikedatabase.db')
