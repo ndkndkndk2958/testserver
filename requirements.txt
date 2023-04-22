@@ -1,4 +1,4 @@
 Flask
 flask_socketio
 flask_sqlalchemy
-gevent
+pip install gevent gevent-websocket
