@@ -81,7 +81,7 @@ def add_total_hearts():
 if __name__ == '__main__':
     socketio.run(app, debug=True)
     app.debug = True
-    http_server = WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
+    http_server = WSGIServer(('', 8000), app, handler_class=WebSocketHandler)
     http_server.serve_forever()
 
 from flask import request
