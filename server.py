@@ -1,6 +1,8 @@
 from flask import Flask, render_template, jsonify
 from flask_socketio import SocketIO, emit
 from flask_sqlalchemy import SQLAlchemy
+from gevent.pywsgi import WSGIServer
+from geventwebsocket.handler import WebSocketHandler
 import os
 import random
 
@@ -78,6 +80,9 @@ def add_total_hearts():
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
+    app.debug = True
+    http_server = WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
+    http_server.serve_forever()
 
 from flask import request
 from flask_restful import Resource
