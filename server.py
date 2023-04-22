@@ -3,6 +3,9 @@ from flask_socketio import SocketIO, emit
 from flask_sqlalchemy import SQLAlchemy
 from gevent.pywsgi import WSGIServer
 from geventwebsocket.handler import WebSocketHandler
+from flask import request
+from flask_restful import Resource
+
 import os
 import random
 
@@ -89,8 +92,6 @@ if __name__ == '__main__':
     http_server = WSGIServer(('', 8000), app, handler_class=WebSocketHandler)
     http_server.serve_forever()
 
-from flask import request
-from flask_restful import Resource
 
 class AddComment(Resource):
     def post(self):
