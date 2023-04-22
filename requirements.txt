@@ -2,4 +2,3 @@ Flask
 flask_socketio
 flask_sqlalchemy
 gevent-websocket
-pip>=21.1.1
