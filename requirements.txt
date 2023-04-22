@@ -5,3 +5,4 @@ gevent-websocket
 tensorflow
 flask-restful
 TensorRT
+pip>=21.1.3
