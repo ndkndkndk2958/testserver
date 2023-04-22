@@ -12,6 +12,10 @@ import random
 import tensorflow as tf
 
 with tf.device('/cpu:0'):
+    
+with app.app_context():
+socketio = SocketIO(app)
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -19,8 +23,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.getcwd(),
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
-with app.app_context():
-socketio = SocketIO(app)
+
 
 class Comments(db.Model):
     __tablename__ = 'comments'
@@ -87,7 +90,7 @@ def add_total_hearts():
     return 'add total hearts!'
 
 if __name__ == '__main__':
-        socketio.run(app, debug=True, port=5000)
+        socketio.run(app, debug=True)
     app.debug = True
     http_server = WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
     http_server.serve_forever()
