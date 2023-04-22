@@ -4,3 +4,4 @@ flask_sqlalchemy
 gevent-websocket
 tensorflow
 flask-restful
+TensorRT
