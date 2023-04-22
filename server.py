@@ -87,7 +87,8 @@ def add_total_hearts():
     return 'add total hearts!'
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True,port=8000)
+    with app.app_context():
+        socketio.run(app, debug=True, port=5000)
     app.debug = True
     http_server = WSGIServer(('', 8000), app, handler_class=WebSocketHandler)
     http_server.serve_forever()
