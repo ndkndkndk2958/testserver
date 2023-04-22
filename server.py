@@ -17,7 +17,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 with app.app_context():
-socketio = SocketIO(app, cors_allowed_origines='*')
+socketio = SocketIO(app)
 
 class Comments(db.Model):
     __tablename__ = 'comments'
