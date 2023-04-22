@@ -92,7 +92,7 @@ with tf.device('/cpu:0'):
     if __name__ == '__main__':
         socketio.run(app, host='0.0.0.0', port=8080)
         app.debug = True
-        http_server = WSGIServer(('', 8080), app, handler_class=WebSocketHandler)
+        http_server = WSGIServer(('', 8000), app, handler_class=WebSocketHandler)
         http_server.serve_forever()
 
 
