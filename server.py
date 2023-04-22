@@ -13,16 +13,13 @@ import tensorflow as tf
 
 with tf.device('/cpu:0'):
     
-with app.app_context():
-socketio = SocketIO(app)
-
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.getcwd(), 'gumikedatabase.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
+socketio = SocketIO(app)
 
 
 class Comments(db.Model):
