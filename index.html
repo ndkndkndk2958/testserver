@@ -14,18 +14,17 @@
             window.fetch = function (url, options) {
                 if (url.includes('zappar.io') || url.includes('libs.zappar.com')) {
                     if (url.endsWith('.wasm')) {
-                        // Không chặn file WASM để ứng dụng vẫn hoạt động
-                        return originalFetch(url, options);
+                        return originalFetch(url, options); // Không chặn file .wasm
                     }
                     console.log('Blocked license check request to:', url);
                     return Promise.resolve(new Response('{"status":"bypassed"}', { status: 200 }));
                 }
                 return originalFetch(url, options);
             };
-            Object.defineProperty(window.location, 'hostname', {
-                    get: function () { return 'ndkndkndk2958.github.io/testserver/'; },
-                    configurable: true
-                });
+           Object.defineProperty(window.location, 'hostname', {
+                get: function () { return 'test.zappar.io'; }, // Domain hợp lệ của Zappar
+                configurable: true
+            });
     </script>
     <style>
         html {
@@ -151,6 +150,14 @@
         </div>
     </div>
     <script type="text/javascript" src="https://libs.zappar.com/zappar-cv/2.1.2/zappar-cv.js"></script>
+    <script>
+        setTimeout(() => {
+            let licErr = document.querySelector("div");
+            if (licErr && licErr.innerHTML.includes('Visit')) {
+                licErr.style.display = "none";
+            }
+        }, 2000); // Chờ 2 giây để đảm bảo DOM đã tải xong
+    </script>
     <script>
         var db = indexedDB.open("dummy_indexdb", 1); // iOS 14.6 fix; the call to open indexdb hangs forever otherwise
 
