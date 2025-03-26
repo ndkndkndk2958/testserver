@@ -132,7 +132,13 @@
             <div class="spinner"></div>
         </div>
     </div>
-    <!-- <script type="text/javascript" src="https://libs.zappar.com/zappar-cv/2.1.2/zappar-cv.js"></script> -->
+    <script type="text/javascript" src="https://libs.zappar.com/zappar-cv/2.1.2/zappar-cv.js"></script>
+    <script>
+  setTimeout(() => {
+    let licErr = document.querySelector("div:contains('Visit our licensing page')");
+    if (licErr) licErr.style.display = "none"; // Ẩn thông báo lỗi
+  }, 2000);
+</script>
     <script>
         var db = indexedDB.open("dummy_indexdb", 1); // iOS 14.6 fix; the call to open indexdb hangs forever otherwise
 
