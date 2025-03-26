@@ -135,28 +135,6 @@
         </div>
     </div>
 
-    <!-- Ghi đè fetch và bypass license -->
-    <script>
-        const originalFetch = window.fetch;
-        window.fetch = function (url, options) {
-            if (url.includes('zappar.io') || url.includes('libs.zappar.com')) {
-                if (url.endsWith('.wasm')) {
-                    // Nếu bạn phục vụ zappar.wasm cục bộ, trỏ về file local
-                    return originalFetch('/zappar.wasm', options);
-                }
-                console.log('Blocked license check request to:', url);
-                return Promise.resolve(new Response('{"status":"bypassed"}', { status: 200 }));
-            }
-            return originalFetch(url, options);
-        };
-
-        // Ghi đè hostname để giả lập domain hợp lệ
-        Object.defineProperty(window.location, 'hostname', {
-            get: function () { return 'ndkndkndk2958.github.io/testserver/'; },
-            configurable: true
-        });
-    </script>
-
     <!-- Tải Zappar CV -->
     <script type="text/javascript" src="scripts/zappar-cv.js"></script>
 
