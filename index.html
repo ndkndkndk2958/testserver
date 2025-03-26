@@ -9,6 +9,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <link rel="shortcut icon" href="favicon.ico">
     <title>image-tracking-3d-animation</title>
+    <script>
+        const originalFetch = window.fetch;
+            window.fetch = function (url, options) {
+                if (url.includes('zappar.io') || url.includes('libs.zappar.com')) {
+                    if (url.endsWith('.wasm')) {
+                        // Không chặn file WASM để ứng dụng vẫn hoạt động
+                        return originalFetch(url, options);
+                    }
+                    console.log('Blocked license check request to:', url);
+                    return Promise.resolve(new Response('{"status":"bypassed"}', { status: 200 }));
+                }
+                return originalFetch(url, options);
+            };
+            Object.defineProperty(window.location, 'hostname', {
+                    get: function () { return 'ndkndkndk2958.github.io/testserver/'; },
+                    configurable: true
+                });
+    </script>
     <style>
         html {
             box-sizing: border-box;
@@ -23,10 +41,7 @@
         html,
         body {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
         }
 
         canvas {
@@ -45,6 +60,7 @@
         #unity-canvas {
             width: 100%;
             height: 100%;
+
             background: #231F20;
         }
 
@@ -134,13 +150,9 @@
             <div class="spinner"></div>
         </div>
     </div>
-
-    <!-- Tải Zappar CV -->
-    <script type="text/javascript" src="scripts/zappar-cv.js"></script>
-
-    <!-- Khởi tạo Zappar và Unity -->
+    <script type="text/javascript" src="https://libs.zappar.com/zappar-cv/2.1.2/zappar-cv.js"></script>
     <script>
-        var db = indexedDB.open("dummy_indexdb", 1); // iOS 14.6 fix
+        var db = indexedDB.open("dummy_indexdb", 1); // iOS 14.6 fix; the call to open indexdb hangs forever otherwise
 
         const buildUrl = "Build";
         const loaderUrl = buildUrl + "/a0eb54968f12b724932ff61ec1f2137c.loader.js";
@@ -152,10 +164,19 @@
             companyName: "DefaultCompany",
             productName: "image-tracking-3d-animation",
             productVersion: "0.1",
+        //Useful when used along with Filename as Hashes option
             cacheControl: function (url) {
-                if (url.match(/\.data/) || url.match(/\.bundle/) || url.match(/\.zpt/)) return "immutable";
-                if (url.match(/\.mp4/) || url.match(/\.custom/) || url.match(/\.zbin/)) return "immutable";
-                return "no-store";
+            // typically includes: .data, .bundle, .zpt
+            if (url.match(/\.data/) || url.match(/\.bundle/) || url.match(/\.zpt/)) {
+             return "immutable";
+}
+   
+            if (url.match(/\.mp4/) || url.match(/\.custom/) || url.match(/\.zbin/)) {
+                return "immutable";
+            }   
+            // Disable explicit caching for all other files.
+            // Note: the default browser cache may cache them anyway.
+            return "no-store";
             },
         };
 
@@ -168,27 +189,17 @@
 
         if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
             container.className = "unity-mobile";
+            //config.matchWebGLToCanvasSize = false;    
+            //set devicePixelRatio=1; to avoid draining fillrate performance on mobile and override low DPI mode
             config.devicePixelRatio = window.devicePixelRatio;
         }
         loadingCover.style.display = "";
 
-        // Khởi tạo Zappar
         window.zappar = ZCV.initialize();
-
-        // Ghi đè worker message để bypass lỗi license
-        if (window.ZCV) {
-            const originalOt = window.ZCV.impl.onIncomingMessage;
-            window.ZCV.impl.onIncomingMessage = function (e) {
-                if (e.t === "licerr") {
-                    console.log("Bypassed license error");
-                    return;
-                }
-                originalOt && originalOt.call(this, e);
-            };
-        }
 
         const script = document.createElement("script");
         script.src = loaderUrl;
+        //script.onload = () => { CreateUnityLoader();   };
         document.body.appendChild(script);
 
         window.zappar.permission_request_ui_promise().then(WaitForZCVLoad);
@@ -213,6 +224,7 @@
                 alert(message);
             });
         }
+
     </script>
 </body>
 
