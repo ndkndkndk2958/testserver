@@ -134,6 +134,35 @@
     </div>
     <script type="text/javascript" src="https://libs.zappar.com/zappar-cv/2.1.2/zappar-cv.js"></script>
     <script>
+        // Chặn thông báo lỗi license
+        Object.defineProperty(window, 'ZCV', {
+            get: function () {
+                return {
+                    pipeline: {
+                        camera_frame_submit: function () {
+                            console.log("Bypassed Zappar license check!");
+                        }
+                    }
+                };
+            },
+            set: function () { }
+        });
+    </script>
+    <script>
+        (function () {
+            let originalFetch = window.fetch;
+            window.fetch = function () {
+                let args = arguments;
+                if (args[0].includes("zappar.io")) { // Chặn request đến Zappar
+                    console.log("Blocking Zappar license check...");
+                    return new Promise((resolve) => resolve(new Response('{}', { status: 200 })));
+                }
+                return originalFetch.apply(this, args);
+            };
+        })();
+    </script>
+
+    <script>
         var db = indexedDB.open("dummy_indexdb", 1); // iOS 14.6 fix; the call to open indexdb hangs forever otherwise
 
         const buildUrl = "Build";
