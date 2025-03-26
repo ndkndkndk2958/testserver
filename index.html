@@ -23,7 +23,10 @@
         html,
         body {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
         }
 
         canvas {
@@ -42,7 +45,6 @@
         #unity-canvas {
             width: 100%;
             height: 100%;
-
             background: #231F20;
         }
 
@@ -132,56 +134,35 @@
             <div class="spinner"></div>
         </div>
     </div>
-    <script>
-        e.addEventListener("message", (e => {
-                if (e.data.t === "licerr") return; // Bỏ qua thông điệp lỗi license
-                q.postIncomingMessage(e.data);
-            }))
-    </script>
+
+    <!-- Ghi đè fetch và bypass license -->
     <script>
         const originalFetch = window.fetch;
-            window.fetch = function (url, options) {
-                if (url.includes('zappar.io') || url.includes('libs.zappar.com')) {
-                    console.log('Blocked license check request to:', url);
-                    return Promise.resolve(new Response('{"status":"bypassed"}', { status: 200 }));
+        window.fetch = function (url, options) {
+            if (url.includes('zappar.io') || url.includes('libs.zappar.com')) {
+                if (url.endsWith('.wasm')) {
+                    // Nếu bạn phục vụ zappar.wasm cục bộ, trỏ về file local
+                    return originalFetch('/zappar.wasm', options);
                 }
-                return originalFetch(url, options);
-            };
-    </script>
-    <script type="text/javascript" src="scripts/zappar-cv.js"></script>
-    <script>
-        (function () {
-            // Kiểm tra nếu ZCV đã được tải
-            if (window.ZCV) {
-                // Ghi đè pipeline_camera_frame_submit (thường kiểm tra license)
-                let originalFunc = ZCV.pipeline.camera_frame_submit;
-                ZCV.pipeline.camera_frame_submit = function () {
-                    console.log("Bypassed Zappar license check!");
-                    return originalFunc ? originalFunc.apply(this, arguments) : undefined;
-                };
-            } else {
-                console.warn("ZCV chưa được tải, thử chặn sau...");
-                setTimeout(arguments.callee, 500); // Chạy lại sau 500ms nếu ZCV chưa load
+                console.log('Blocked license check request to:', url);
+                return Promise.resolve(new Response('{"status":"bypassed"}', { status: 200 }));
             }
-        })();
-    </script>
-    <script>
-        (function () {
-            let originalFetch = window.fetch;
-            window.fetch = function () {
-                let args = arguments;
-                if (args[0].includes("zappar.io")) {
-                    console.log("Blocking Zappar license check...");
-                    return new Promise((resolve) => resolve(new Response('{}', { status: 200 })));
-                }
-                return originalFetch.apply(this, args);
-            };
-        })();
+            return originalFetch(url, options);
+        };
+
+        // Ghi đè hostname để giả lập domain hợp lệ
+        Object.defineProperty(window.location, 'hostname', {
+            get: function () { return 'ndkndkndk2958.github.io/testserver/'; },
+            configurable: true
+        });
     </script>
 
+    <!-- Tải Zappar CV -->
+    <script type="text/javascript" src="scripts/zappar-cv.js"></script>
 
+    <!-- Khởi tạo Zappar và Unity -->
     <script>
-        var db = indexedDB.open("dummy_indexdb", 1); // iOS 14.6 fix; the call to open indexdb hangs forever otherwise
+        var db = indexedDB.open("dummy_indexdb", 1); // iOS 14.6 fix
 
         const buildUrl = "Build";
         const loaderUrl = buildUrl + "/a0eb54968f12b724932ff61ec1f2137c.loader.js";
@@ -193,19 +174,10 @@
             companyName: "DefaultCompany",
             productName: "image-tracking-3d-animation",
             productVersion: "0.1",
-        //Useful when used along with Filename as Hashes option
             cacheControl: function (url) {
-            // typically includes: .data, .bundle, .zpt
-            if (url.match(/\.data/) || url.match(/\.bundle/) || url.match(/\.zpt/)) {
-             return "immutable";
-}
-   
-            if (url.match(/\.mp4/) || url.match(/\.custom/) || url.match(/\.zbin/)) {
-                return "immutable";
-            }   
-            // Disable explicit caching for all other files.
-            // Note: the default browser cache may cache them anyway.
-            return "no-store";
+                if (url.match(/\.data/) || url.match(/\.bundle/) || url.match(/\.zpt/)) return "immutable";
+                if (url.match(/\.mp4/) || url.match(/\.custom/) || url.match(/\.zbin/)) return "immutable";
+                return "no-store";
             },
         };
 
@@ -218,17 +190,27 @@
 
         if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
             container.className = "unity-mobile";
-            //config.matchWebGLToCanvasSize = false;    
-            //set devicePixelRatio=1; to avoid draining fillrate performance on mobile and override low DPI mode
             config.devicePixelRatio = window.devicePixelRatio;
         }
         loadingCover.style.display = "";
 
+        // Khởi tạo Zappar
         window.zappar = ZCV.initialize();
+
+        // Ghi đè worker message để bypass lỗi license
+        if (window.ZCV) {
+            const originalOt = window.ZCV.impl.onIncomingMessage;
+            window.ZCV.impl.onIncomingMessage = function (e) {
+                if (e.t === "licerr") {
+                    console.log("Bypassed license error");
+                    return;
+                }
+                originalOt && originalOt.call(this, e);
+            };
+        }
 
         const script = document.createElement("script");
         script.src = loaderUrl;
-        //script.onload = () => { CreateUnityLoader();   };
         document.body.appendChild(script);
 
         window.zappar.permission_request_ui_promise().then(WaitForZCVLoad);
@@ -253,7 +235,6 @@
                 alert(message);
             });
         }
-
     </script>
 </body>
 
