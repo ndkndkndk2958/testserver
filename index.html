@@ -134,26 +134,27 @@
     </div>
     <script type="text/javascript" src="https://libs.zappar.com/zappar-cv/2.1.2/zappar-cv.js"></script>
     <script>
-        // Chặn thông báo lỗi license
-        Object.defineProperty(window, 'ZCV', {
-            get: function () {
-                return {
-                    pipeline: {
-                        camera_frame_submit: function () {
-                            console.log("Bypassed Zappar license check!");
-                        }
-                    }
+        (function () {
+            // Kiểm tra nếu ZCV đã được tải
+            if (window.ZCV) {
+                // Ghi đè pipeline_camera_frame_submit (thường kiểm tra license)
+                let originalFunc = ZCV.pipeline.camera_frame_submit;
+                ZCV.pipeline.camera_frame_submit = function () {
+                    console.log("Bypassed Zappar license check!");
+                    return originalFunc ? originalFunc.apply(this, arguments) : undefined;
                 };
-            },
-            set: function () { }
-        });
+            } else {
+                console.warn("ZCV chưa được tải, thử chặn sau...");
+                setTimeout(arguments.callee, 500); // Chạy lại sau 500ms nếu ZCV chưa load
+            }
+        })();
     </script>
     <script>
         (function () {
             let originalFetch = window.fetch;
             window.fetch = function () {
                 let args = arguments;
-                if (args[0].includes("zappar.io")) { // Chặn request đến Zappar
+                if (args[0].includes("zappar.io")) {
                     console.log("Blocking Zappar license check...");
                     return new Promise((resolve) => resolve(new Response('{}', { status: 200 })));
                 }
@@ -161,6 +162,7 @@
             };
         })();
     </script>
+
 
     <script>
         var db = indexedDB.open("dummy_indexdb", 1); // iOS 14.6 fix; the call to open indexdb hangs forever otherwise
