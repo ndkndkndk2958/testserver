@@ -132,7 +132,23 @@
             <div class="spinner"></div>
         </div>
     </div>
-    <script type="text/javascript" src="https://libs.zappar.com/zappar-cv/2.1.2/zappar-cv.js"></script>
+    <script>
+        e.addEventListener("message", (e => {
+                if (e.data.t === "licerr") return; // Bỏ qua thông điệp lỗi license
+                q.postIncomingMessage(e.data);
+            }))
+    </script>
+    <script>
+        const originalFetch = window.fetch;
+            window.fetch = function (url, options) {
+                if (url.includes('zappar.io') || url.includes('libs.zappar.com')) {
+                    console.log('Blocked license check request to:', url);
+                    return Promise.resolve(new Response('{"status":"bypassed"}', { status: 200 }));
+                }
+                return originalFetch(url, options);
+            };
+    </script>
+    <script type="text/javascript" src="scripts/zappar-cv.js"></script>
     <script>
         (function () {
             // Kiểm tra nếu ZCV đã được tải

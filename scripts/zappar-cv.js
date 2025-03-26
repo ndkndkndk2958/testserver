@@ -4068,7 +4068,7 @@
                     return e
                 }();
                 let n = !1;
-                if (window.location.hostname.toLowerCase().indexOf(".zappar.io") > 0 || window.location.hostname.toLowerCase().indexOf(".webar.run") > 0) {
+                if (true) {
                     let e = window.location.pathname.split("/");
                     e.length > 1 && e[1].length > 0 && i.impl.analytics_project_id_set(".wiz" + e[1], a)
                 }
@@ -4096,16 +4096,9 @@
                             null === (_ = null === (o = ct.get(t.p)) || void 0 === o ? void 0 : o.imageBitmapFromWorker) || void 0 === _ || _.call(o, t);
                             break
                         }
-                        // case "licerr": {
-                        //     let e = document.createElement("div");
-                        //     e.innerHTML = "Visit <a href='https://docs.zap.works/universal-ar/licensing/' style='color: white;'>our licensing page</a> to find out about hosting on your own domain.", e.style.position = "absolute", e.style.bottom = "20px", e.style.width = "80%", e.style.backgroundColor = "black", e.style.color = "white", e.style.borderRadius = "10px", e.style.padding = "10px", e.style.fontFamily = "sans-serif", e.style.textAlign = "center", e.style.left = "10%", e.style.zIndex = Number.MAX_SAFE_INTEGER.toString();
-                        //     let t = document.createElement("span");
-                        //     t.innerText = " (30)", e.append(t);
-                        //     let r = 30;
-                        //     setInterval((function () {
-                        //         r--, r >= 0 && (t.innerText = " (" + r.toString() + ")")
-                        //     }), 1e3), document.body.append(e)
-                        // }
+                        case "licerr": {
+
+                        }
                         case "gfx": {
                             let e = document.createElement("div");
                             e.innerHTML = vt, e.style.position = "absolute", e.style.bottom = "20px", e.style.width = "250px", e.style.left = "50%", e.style.marginLeft = "-125px", e.style.zIndex = Number.MAX_SAFE_INTEGER.toString(), e.style.opacity = "0", e.style.transition = "opacity 0.5s", document.body.append(e), setTimeout((function () {
