@@ -12,7 +12,7 @@
     <script>
         const originalFetch = window.fetch;
             window.fetch = function (url, options) {
-                if (url.includes('zappar.io') || url.includes('libs.zappar.com') || url.includes('ndkndkndk2958.github.io/')) {
+                if (url.includes('zappar.io') || url.includes('libs.zappar.com') || url.includes('ndkndkndk2958.github.io')) {
                     if (url.endsWith('.wasm')) {
                         return originalFetch(url, options); // Không chặn file .wasm
                     }
