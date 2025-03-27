@@ -9,25 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <link rel="shortcut icon" href="favicon.ico">
     <title>image-tracking-3d-animation</title>
-    <!-- <script>
-        const originalFetch = window.fetch;
-            window.fetch = function (url, options) {
-                if (url.includes('zappar.io') || url.includes('libs.zappar.com') || url.includes('ndkndkndk2958.github.io')) {
-                    if (url.endsWith('.wasm')) {
-                        return originalFetch(url, options); // Không chặn file .wasm
-                    }
-                    console.log('Blocked license check request to:', url);
-                    return Promise.resolve(new Response('{"status":"bypassed"}', { status: 200 }));
-                }
-                return originalFetch(url, options);
-            };
-    </script> -->
-    <!-- <script>
-         Object.defineProperty(window.location, 'hostname', {
-                get: function () { return 'ndkndkndk2958.github.io'; }, // Domain hợp lệ của Zappar
-                configurable: true
-            });
-    </script> -->
     <style>
         html {
             box-sizing: border-box;
@@ -151,22 +132,12 @@
             <div class="spinner"></div>
         </div>
     </div>
-    <!-- <script type="text/javascript" src="https://libs.zappar.com/zappar-cv/2.1.2/zappar-cv.js"></script> -->
-    <script type="text/javascript" src="scripts/zappar-cv.js"></script>
-    <script>
-        setTimeout(() => {
-            let licErr = document.querySelector("div");
-            if (licErr && licErr.innerHTML.includes('Visit')) {
-                licErr.style.display = "none";
-            }
-        }, 5000); // Chờ 2 giây để đảm bảo DOM đã tải xong
-    </script>
+    <script type="text/javascript" src="https://libs.zappar.com/zappar-cv/2.1.2/zappar-cv.js"></script>
     <script>
         var db = indexedDB.open("dummy_indexdb", 1); // iOS 14.6 fix; the call to open indexdb hangs forever otherwise
 
         const buildUrl = "Build";
         const loaderUrl = buildUrl + "/a0eb54968f12b724932ff61ec1f2137c.loader.js";
-        console.log("--------loaderUrl: " + loaderUrl);
         const config = {
             dataUrl: buildUrl + "/9282c5583ed87e9ce753981549890552.data",
             frameworkUrl: buildUrl + "/498be0faeee7fda0aa215d884b48f0e4.framework.js",
